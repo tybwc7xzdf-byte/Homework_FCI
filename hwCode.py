@@ -35,26 +35,29 @@ def energia(sig):
 def sinc_filter(n):
     return np.sin(n)/(n)
 
-def convoluzione(sig1, sig2):
-    ris = np.zeros(len(sig1))
-    for i in range(len(sig1)-1):
-        ris[i] = sig1[i] * sig2[-i-1]
-    return ris
-
-
 
 
 #Esercizio 2
+
+N = len(pressioni)
+n = np.arange(N)
+n_centered = n - (N - 1) / 2
+
+B = 0.1 
+
+h_x_reale = np.sinc(B * n_centered)
+
+h_x_reale = h_x_reale / np.sum(h_x_reale)
+
+y_n = np.convolve(pressioni, h_x_reale, mode="same")
+
+
 x_spostato = np.subtract(ore, (len(ore)-1)/2)
 h_x = np.sinc(x_spostato)
 
-y_n = np.convolve(h_x, x1, mode="same")
-y_n = convoluzione(h_x, x1)
+#y_n = np.convolve(h_x, pressioni, mode="same")
+#print(y_n)
 
-#grafico convoluzione x1 e sinc
-"""plt.subplot(2,3,3)
-plt.plot(rect(1), y_n, label='convoluzione', color="#ff0606", linewidth=0.5)
-plt.show()"""
 
 
 #Esercizio 2 punto b
@@ -76,7 +79,7 @@ axs[0, 0].set_xlim(min(ore), max(ore))
 axs[0, 0].set_ylim(min(x1), max(x1))
 axs[0, 0].set_xlabel("Orario")
 axs[0, 0].set_ylabel("Pressioni")
-axs[0, 0].set_title("Pressioni durante il tempo")
+axs[0, 0].set_title("Esercizio 1: Segnale Pressioni")
 axs[0, 0].grid(True, linestyle=':', alpha=0.5)
 axs[0, 0].legend()
 
