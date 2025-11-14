@@ -125,15 +125,12 @@ axs[1, 0].legend()
 ##GRAFICO 2B---------------
 #Autocorrelazione X
 axs[1, 1].plot(lag, r_xx, label='Autocorrelazione x', color='blue', linewidth=1)
-axs[1, 1].set_title("Autocorrelazione pressioni (Energia)")
-axs[1, 1].grid(True, alpha=0.3)
-axs[1, 1].legend()
-axs[1, 1].set_yticks([]) 
+axs[1, 1].set_title("Confronto Autocorrelazione r_xx e r_yy")
 #Autocorrelazione Y
 axs[1, 1].plot(lag,r_yy, label='Autocorrelazione y', color='orange', linewidth=1)
+axs[1, 1].set_xlabel("Ritardo (Lag)")
 axs[1, 1].grid(True, alpha=0.3)
 axs[1, 1].legend()
-axs[1, 1].set_yticks([]) 
 
 correlazione_xy = np.corrcoef(pressioni, y_n)[0, 1]
 testo_corr = f'Correlazione X e Y: {correlazione_xy:.4f}'
@@ -144,20 +141,6 @@ axs[1, 1].text(0.95, 0.80,
              verticalalignment='top',
              horizontalalignment='right',
              bbox=dict(boxstyle='round', facecolor='white', alpha=0.8))
-
-
-#x_corr = int(np.correlate(pressioni, pressioni))
-#y_corr = int(np.correlate(y_n, y_n))
-#testo_energia = f'Energia X: {x_corr}\nEnergia Y: {y_corr}'
-#axs[1, 1].text(0.95, 0.95,
-#             testo_energia,  
-#             transform=axs[1, 1].transAxes, 
-#             fontsize=10,
-#             verticalalignment='top',
-#             horizontalalignment='right',
-#             bbox=dict(boxstyle='round', facecolor='white', alpha=0.8))
-
-#axs[2, 1].axis('off')
 
 
 ##CALCOLO VARIANZA E ENERGIA##
@@ -195,6 +178,22 @@ print(f"Larghezza lobo segnale originale (x1N): {width_x} campioni")
 print(f"Larghezza lobo segnale filtrato (y1N): {width_y} campioni")
 
 
+##ESERCIZIO 3##
+x2N = x2 - np.mean(x2)            
+
+if len(x1N) != len(x2N):
+    min_length = min(len(x1N), len(x2N))
+    x1N = x1N[:min_length]
+    x2N = x2N[:min_length] 
+
+delta_x = np.abs(x1N - x2N)
+
+axs[2, 0].plot(delta_x, label='Salto $\Delta x[n]$', color='red', linewidth=1)
+axs[2, 0].set_title("Salto di Pressione tra Nodo 8734 e 8606") 
+axs[2, 0].set_xlabel("Campioni")
+axs[2, 0].set_ylabel("Differenza Assoluta")
+axs[2, 0].grid(True, linestyle=':', alpha=0.5)
+axs[2, 0].legend()
 
 
 # Spaziatura e visualizzazione
