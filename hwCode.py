@@ -60,24 +60,6 @@ print(convoluzione(np.arange(3),np.arange(3)))
 
 
 
-# --- GRAFICO 1 ---
-plt.figure(figsize=(15, 8))
-plt.plot(ore, pressioni, label='funzione', color='#1f77b4', linewidth=0.5)
-#plt.axvline(min(pressioni), linestyle='--', color='darkred', label=f'Valore Minimo: x={min(pressioni):.2f}')
-plt.axhline(valore_medio(pressioni), linestyle='--', color='darkred', label=f'Valore Medio: {valore_medio(pressioni):.2f}')
-plt.axhline(energia(pressioni), linestyle='--', color='darkred', label=f'Energia: {energia(pressioni):.2f}')
-# Aggiunta di dettagli
-plt.xlim(min(ore), max(ore))
-plt.ylim(min(pressioni), max(pressioni))
-plt.xlabel("Orario")
-plt.ylabel("Pressioni")
-plt.title("Pressioni durante il tempo")
-plt.grid(True, linestyle=':', alpha=0.5)
-plt.legend()
-plt.show()
-
-
-
 #Esercizio 2
 x_spostato = np.subtract(ore, (len(ore)-1)/2)
 h_x = np.sinc(x_spostato)
@@ -85,16 +67,6 @@ h_x = np.sinc(x_spostato)
 y_n = np.convolve(h_x, pressioni, mode="same")
 y_n = convoluzione(h_x, pressioni)
 print(y_n)
-#grafico sinc centrata nel centro delle ore tempo discreto
-plt.figure(figsize=(30, 10))
-
-plt.subplot(2,3,1)
-plt.plot(x_spostato, y_n, label='sinc', color='#1f77b4', linewidth=0.5)
-plt.ylim(31,38)
-
-#grafico originale pressioni
-plt.subplot(2,3,2)
-plt.plot(x_spostato, pressioni, label='funzione originale', color="#1AECFF", linewidth=0.5)
 
 #grafico convoluzione pressioni e sinc
 """plt.subplot(2,3,3)
@@ -102,28 +74,65 @@ plt.plot(rect(1), y_n, label='convoluzione', color="#ff0606", linewidth=0.5)
 plt.show()"""
 
 
-
-
 #Esercizio 2 punto b
-
-
 #autocorrelazione segnali x e y
 x_corr = int(np.correlate(pressioni, pressioni))
 y_corr = int(np.correlate(y_n, y_n))
 
-plt.figure(figsize=(10, 7))
-plt.subplot(2, 1, 1)
-plt.axhline(x_corr, linestyle='--', color='darkred', label=f'autocorrelazione x: {x_corr:.2f}')
-#plt.annotate(f'autocorrelazione x {x_corr:.2f}', xy=(0.2,820000))
-plt.title("autocorrelazione pressioni")
-plt.grid(True, alpha=0.3)
 
-plt.subplot(2, 1, 2)
-plt.axhline(y_corr, linestyle='--', color='darkred', label=f'autocorrelazione x: {y_corr:.2f}')
-plt.title("autocrrelazione filtro")
-plt.grid(True, alpha=0.3)
+###grafici in una sola finestra###
 
-plt.tight_layout()
+#finestra unica
+fig, axs = plt.subplots(3, 2, figsize=(15, 12))
+
+# Grafico 1
+axs[0, 0].plot(ore, pressioni, label='funzione', color='#1f77b4', linewidth=0.5)
+axs[0, 0].axhline(valore_medio(pressioni), linestyle='--', color='darkred', label=f'Valore Medio: {valore_medio(pressioni):.2f}')
+#axs[0, 0].axhline(energia(pressioni), linestyle='--', color='darkred', label=f'Energia: {energia(pressioni):.2f}')
+axs[0, 0].set_xlim(min(ore), max(ore))
+axs[0, 0].set_ylim(min(pressioni), max(pressioni))
+axs[0, 0].set_xlabel("Orario")
+axs[0, 0].set_ylabel("Pressioni")
+axs[0, 0].set_title("Pressioni durante il tempo")
+axs[0, 0].grid(True, linestyle=':', alpha=0.5)
+axs[0, 0].legend()
+
+
+# Esercizio 2
+axs[0, 1].plot(x_spostato, y_n, label='segnale filtrato y_n', color='#1f77b4', linewidth=0.5)
+axs[0, 1].set_ylim(31,38)
+axs[0, 1].set_title("Esercizio 2: Segnale filtrato (y_n)")
+axs[0, 1].set_xlabel("Campioni (spostati)")
+axs[0, 1].set_ylabel("Ampiezza")
+axs[0, 1].grid(True, linestyle=':', alpha=0.5)
+axs[0, 1].legend()
+
+#es2: Grafico Pressioni 
+axs[1, 0].plot(x_spostato, pressioni, label='funzione originale', color="#1AECFF", linewidth=0.5)
+axs[1, 0].set_title("Esercizio 2: Segnale originale")
+axs[1, 0].set_xlabel("Campioni (spostati)")
+axs[1, 0].set_ylabel("Pressione")
+axs[1, 0].grid(True, linestyle=':', alpha=0.5)
+axs[1, 0].legend()
+
+#es2b: Autocorrelazione X
+axs[1, 1].axhline(x_corr, linestyle='--', color='darkred', label=f'autocorrelazione x: {x_corr:.2f}')
+axs[1, 1].set_title("Autocorrelazione pressioni (Energia)")
+axs[1, 1].grid(True, alpha=0.3)
+axs[1, 1].legend()
+axs[1, 1].set_yticks([]) 
+
+
+#es2b: Autocorrelazione Y
+axs[2, 0].axhline(y_corr, linestyle='--', color='darkred', label=f'autocorrelazione y: {y_corr:.2f}')
+axs[2, 0].set_title("Autocorrelazione filtro (Energia)")
+axs[2, 0].grid(True, alpha=0.3)
+axs[2, 0].legend()
+axs[2, 0].set_yticks([])
+
+
+#axs[2, 1].axis('off')
+
+# Spaziatura e visualizzazione
+plt.tight_layout(pad = 3.0)
 plt.show()
-
-
