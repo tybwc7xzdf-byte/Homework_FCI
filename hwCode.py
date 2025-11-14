@@ -53,24 +53,19 @@ def sinc_filter(n):
 
 #Esercizio 2
 
+x_spostato = np.subtract(ore, (len(ore)-1)/2)
+h_x = np.sinc(x_spostato)
+
 N = len(pressioni)
 n = np.arange(N)
 n_centered = n - (N - 1) / 2
 
-B = 0.1 
+B = 0.1
 
 h_x_reale = np.sinc(B * n_centered)
-
 h_x_reale = h_x_reale / np.sum(h_x_reale)
 
 y_n = np.convolve(pressioni, h_x_reale, mode="same")
-
-
-x_spostato = np.subtract(ore, (len(ore)-1)/2)
-h_x = np.sinc(x_spostato)
-
-#y_n = np.convolve(h_x, pressioni, mode="same")
-#print(y_n)
 
 
 
@@ -86,7 +81,7 @@ y_corr = int(np.correlate(y_n, y_n))
 fig, axs = plt.subplots(3, 2, figsize=(15, 12))
 
 # Grafico 1
-axs[0, 0].plot(ore, pressioni, label='funzione', color='#1f77b4', linewidth=0.5)
+axs[0, 0].plot(ore, pressioni, label='funzione', color='#1f77b4', linewidth=1)
 axs[0, 0].axhline(valore_medio(pressioni), linestyle='--', color='darkred', label=f'Valore Medio: {valore_medio(pressioni):.2f}')
 #axs[0, 0].axhline(energia(pressioni), linestyle='--', color='darkred', label=f'Energia: {energia(pressioni):.2f}')
 axs[0, 0].set_xlim(min(ore), max(ore))
@@ -98,22 +93,27 @@ axs[0, 0].grid(True, linestyle=':', alpha=0.5)
 axs[0, 0].legend()
 
 
-# Esercizio 2
-axs[0, 1].plot(x_spostato, y_n, label='segnale filtrato y_n', color='#1f77b4', linewidth=0.5)
+# Esercizio 2a
+axs[0, 1].plot(x_spostato, y_n, label='segnale filtrato y_n', color="#060002", linewidth=1)
 axs[0, 1].set_ylim(31,38)
-axs[0, 1].set_title("Esercizio 2: Segnale filtrato (y_n)")
+axs[0, 1].set_title("Esercizio 2a: Segnale filtrato (y_n) e segnale originale")
 axs[0, 1].set_xlabel("Campioni (spostati)")
 axs[0, 1].set_ylabel("Ampiezza")
 axs[0, 1].grid(True, linestyle=':', alpha=0.5)
 axs[0, 1].legend()
 
-#es2: Grafico Pressioni 
-axs[1, 0].plot(x_spostato, pressioni, label='funzione originale', color="#1AECFF", linewidth=0.5)
-axs[1, 0].set_title("Esercizio 2: Segnale originale")
-axs[1, 0].set_xlabel("Campioni (spostati)")
-axs[1, 0].set_ylabel("Pressione")
-axs[1, 0].grid(True, linestyle=':', alpha=0.5)
-axs[1, 0].legend()
+axs[0, 1].plot(x_spostato, pressioni, label='funzione originale', color="#17C2D2", linewidth=0.5)
+axs[0, 1].set_xlabel("Campioni (spostati)")
+axs[0, 1].set_ylabel("Pressione")
+axs[0, 1].grid(True, linestyle=':', alpha=0.5)
+axs[0, 1].legend()
+
+axs[1, 0].plot(h_x_reale, label='filtro sinc', color="#FF5733", linewidth=1)
+axs[1,0].set_title("Filtro Sinc Applicato")
+axs[1,0].set_xlabel("Campioni")
+axs[1,0].set_ylabel("Ampiezza")
+axs[1,0].grid(True, linestyle=':', alpha=0.5)
+axs[1,0].legend()
 
 #es2b: Autocorrelazione X
 axs[1, 1].axhline(x_corr, linestyle='--', color='darkred', label=f'autocorrelazione x: {x_corr:.2f}')
