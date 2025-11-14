@@ -179,6 +179,7 @@ print(f"Larghezza lobo segnale filtrato (y1N): {width_y} campioni")
 
 
 ##ESERCIZIO 3##
+
 x2N = x2 - np.mean(x2)            
 
 if len(x1N) != len(x2N):
@@ -188,14 +189,33 @@ if len(x1N) != len(x2N):
 
 delta_x = np.abs(x1N - x2N)
 
-axs[2, 0].plot(delta_x, label='Salto $\Delta x[n]$', color='red', linewidth=1)
-axs[2, 0].set_title("Salto di Pressione tra Nodo 8734 e 8606") 
-axs[2, 0].set_xlabel("Campioni")
-axs[2, 0].set_ylabel("Differenza Assoluta")
-axs[2, 0].grid(True, linestyle=':', alpha=0.5)
-axs[2, 0].legend()
+figes3, axs_es3 = plt.subplots(3,1, figsize=(15,10), sharex=True)
+figes3.suptitle("Salto e Segnali di Pressione nei Nodi 8734 e 8606")
 
+axs_es3[0].plot(n, x1N, label='$x_{1N}[n]$ (Nodo 8734)', color='#1f77b4', linewidth=1)
+axs_es3[0].set_title('Segnale $x_{1N}[n]$ (Nodo 8734)')
+axs_es3[0].set_ylabel('Pressione (centrata)')
+axs_es3[0].grid(True, linestyle=':', alpha=0.7)
+axs_es3[0].legend(loc='upper right')
+
+# --- Subplot 2: x2N (Nodo 8606) ---
+axs_es3[1].plot(n, x2N, label='$x_{2N}[n]$ (Nodo 8606)', color='#ff7f0e', linewidth=1)
+axs_es3[1].set_title('Segnale $x_{2N}[n]$ (Nodo 8606)')
+axs_es3[1].set_ylabel('Pressione (centrata)')
+axs_es3[1].grid(True, linestyle=':', alpha=0.7)
+axs_es3[1].legend(loc='upper right')
+
+# --- Subplot 3: Delta x (Salto di pressione) ---
+axs_es3[2].plot(n, delta_x, label='$\Delta x[n] = |x_{1N} - x_{2N}|$', color='#d62728', linewidth=1)
+axs_es3[2].set_title('Salto di Pressione $\Delta x[n]$')
+axs_es3[2].set_xlabel('Campione (n)', fontsize=12)
+axs_es3[2].set_ylabel('Differenza Assoluta')
+axs_es3[2].grid(True, linestyle=':', alpha=0.7)
+axs_es3[2].legend(loc='upper right')
+
+# Ottimizziamo lo spazio e mostriamo
+figes3.tight_layout(rect=[0, 0.03, 1, 0.95]) # Aggiusta per il titolo principale
 
 # Spaziatura e visualizzazione
-plt.tight_layout(pad = 3.0)
+fig.tight_layout(pad = 3.0)
 plt.show()
